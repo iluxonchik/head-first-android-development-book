@@ -1,0 +1,39 @@
+<resources>
+    <string name="app_name">Bits and Pizzas</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_create_order">Create Order</string>
+    <string name="title_activity_order">OrderActivity</string>
+    <string name="action_share">Share</string>
+
+    <string name="title_top">Top Fragment</string>
+    
+    <string-array name="pizzas">
+        <item>Pizza 1</item>
+        <item>Pizza 2</item>
+    </string-array>
+
+    <string-array name="pasta">
+        <item>Pasta 1</item>
+        <item>Pasta 2</item>
+    </string-array>
+
+    <string-array name="stores">
+        <item>Store 1</item>
+        <item>Store 2</item>
+    </string-array>
+
+    <string-array name="titles">
+        <item>Home</item>
+        <item>Pizzas</item>
+        <item>Pasta</item>
+        <item>Stores</item>
+    </string-array>
+    
+    <string name="open_drawer">Open drawer</string>
+    <string name="close_drawer">Close drawer</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
