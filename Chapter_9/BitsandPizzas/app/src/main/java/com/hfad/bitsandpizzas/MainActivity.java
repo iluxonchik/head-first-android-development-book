@@ -43,9 +43,13 @@ public class MainActivity extends Activity {
 
         titles = getResources().getStringArray(R.array.titles);
         drawerList = (ListView)findViewById(R.id.drawer);
+        drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         drawerList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_activated_1, titles));
         drawerList.setOnItemClickListener(new DrawerItemClickListener());
-
+        if (savedInstanceState == null) {
+            // If the MainActivity is newly created, display the TopFragment
+            selectItem(0);
+        }
         drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
                 R.string.open_drawer, R.string.close_drawer) {
             // Gets called when the drawer is closed
@@ -64,7 +68,6 @@ public class MainActivity extends Activity {
                 invalidateOptionsMenu();
             }
         };
-        drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         drawerLayout.setDrawerListener(drawerToggle);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
@@ -140,6 +143,7 @@ public class MainActivity extends Activity {
         ft.commit();
 
         setActionBarTitle(position);
+        drawerLayout.closeDrawer(drawerList); // close the drawer
     }
 
     private void setActionBarTitle(int position) {
@@ -152,9 +156,6 @@ public class MainActivity extends Activity {
             title = titles[position];
         }
         getActionBar().setTitle(title);
-
-        // Close the drawer
-        drawerLayout.closeDrawer(drawerList);
     }
 
     // Called whenever we call invalidateOptionsMenu()
