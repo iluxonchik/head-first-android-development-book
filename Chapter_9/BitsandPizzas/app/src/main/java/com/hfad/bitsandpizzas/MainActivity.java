@@ -2,14 +2,13 @@ package com.hfad.bitsandpizzas;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.app.ListFragment;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +16,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ShareActionProvider;
+
+import java.net.PasswordAuthentication;
 
 
 public class MainActivity extends Activity {
@@ -26,6 +27,7 @@ public class MainActivity extends Activity {
     private ListView drawerList;
     private ActionBarDrawerToggle drawerToggle;
     private DrawerLayout drawerLayout;
+    private int currentPosition = 0;
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
 
@@ -49,6 +51,9 @@ public class MainActivity extends Activity {
         if (savedInstanceState == null) {
             // If the MainActivity is newly created, display the TopFragment
             selectItem(0);
+        } else {
+            currentPosition = savedInstanceState.getInt("position");
+            setActionBarTitle(currentPosition);
         }
         drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
                 R.string.open_drawer, R.string.close_drawer) {
@@ -71,6 +76,30 @@ public class MainActivity extends Activity {
         drawerLayout.setDrawerListener(drawerToggle);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
+
+        getFragmentManager().addOnBackStackChangedListener(
+                new FragmentManager.OnBackStackChangedListener() {
+                    @Override
+                    public void onBackStackChanged() {
+                        FragmentManager fragMan = getFragmentManager();
+                        Fragment fragment = fragMan.findFragmentByTag("visible_fragment");
+                        if (fragment instanceof TopFragment) {
+                            currentPosition = 0;
+                        }
+                        if (fragment instanceof PizzaFragment) {
+                            currentPosition = 1;
+                        }
+                        if (fragment instanceof PastaFragment) {
+                            currentPosition = 2;
+                        }
+                        if (fragment instanceof StoresFragment) {
+                            currentPosition = 3;
+                        }
+                        setActionBarTitle(currentPosition);
+                        drawerList.setItemChecked(currentPosition, true);
+                    }
+                }
+        );
     }
 
     @Override
@@ -117,6 +146,7 @@ public class MainActivity extends Activity {
     }
 
     private void selectItem(int position) {
+        currentPosition = position;
         Fragment fragment;
 
         switch (position) {
@@ -135,7 +165,7 @@ public class MainActivity extends Activity {
         }
 
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.replace(R.id.content_frame, fragment);
+        ft.replace(R.id.content_frame, fragment, "visible_fragment");
 
         ft.addToBackStack(null);
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
@@ -177,5 +207,12 @@ public class MainActivity extends Activity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        // save the current position if the activity's going to be destroyed
+        savedInstanceState.putInt("position", currentPosition);
     }
 }
