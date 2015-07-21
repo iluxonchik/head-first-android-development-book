@@ -82,6 +82,7 @@ public class MainActivity extends Activity {
                     @Override
                     public void onBackStackChanged() {
                         FragmentManager fragMan = getFragmentManager();
+                        // Get the fragment currently attached to the activity
                         Fragment fragment = fragMan.findFragmentByTag("visible_fragment");
                         if (fragment instanceof TopFragment) {
                             currentPosition = 0;
