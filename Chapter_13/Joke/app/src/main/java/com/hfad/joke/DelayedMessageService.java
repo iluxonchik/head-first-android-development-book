@@ -2,6 +2,11 @@ package com.hfad.joke;
 
 import android.app.ActivityManager;
 import android.app.IntentService;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.util.Log;
@@ -19,6 +24,7 @@ public class DelayedMessageService extends IntentService {
     public static final String EXTRA_MESSAGE = "message";
 
     private Handler handler;
+    public static final int NOTIFICATION_ID = 5453; // can be any number
 
     public DelayedMessageService() {
         super("DelayedMessageService");
@@ -47,7 +53,7 @@ public class DelayedMessageService extends IntentService {
                 e.printStackTrace();
             }
             String text = intent.getStringExtra(EXTRA_MESSAGE);
-            showToast(text);
+            showNotification(text);
         }
     }
 
@@ -71,6 +77,33 @@ public class DelayedMessageService extends IntentService {
             so the toast will be diplayed even if the user switches to another app.
 
          */
+    }
+
+    private void showNotification(String text) {
+        // Create a pending intent:
+        // 1. Create an explicit intent
+        Intent intent = new Intent(this, MainActivity.class);
+
+        // 2. Pass the intent to the StackBuilder
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(MainActivity.class); // this and line below make the back button
+        stackBuilder.addNextIntent(intent);             // play nicely
+
+        // 3. Make the pending intent
+        PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Notification notification = new Notification.Builder(this)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(getString(R.string.app_name))
+                .setAutoCancel(true) // close when clicked
+                .setPriority(Notification.PRIORITY_MAX)
+                .setDefaults(Notification.DEFAULT_VIBRATE)
+                .setContentIntent(pendingIntent)
+                .setContentText(text)
+                .build();
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(NOTIFICATION_ID, notification);
     }
 
     /**
