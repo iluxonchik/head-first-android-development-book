@@ -103,6 +103,6 @@ public class MainActivity extends Activity {
                 distanceView.setText(distanceStr);
                 handler.postDelayed(this, 1000);
             }
-        })
+        });
     }
 }
