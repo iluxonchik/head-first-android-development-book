@@ -19,9 +19,16 @@
         <activity
             android:name=".OrderActivity"
             android:label="@string/title_activity_order"
-            android:parentActivityName=".MainActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name=".PizzaDetailActivity"
+            android:label="@string/title_activity_pizza_detail"
+            android:parentActivityName=".MainActivity"
+            >
         </activity>
     </application>
 

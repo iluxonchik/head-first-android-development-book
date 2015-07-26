@@ -5,11 +5,16 @@ import android.provider.Telephony;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 public class CaptionedImagesAdapter  extends RecyclerView.Adapter<CaptionedImagesAdapter.ViewHolder> {
+
+    public static interface Listener {
+        public void onClick(int position);
+    }
 
     // Each data item in out recycler view is a card, so we need to make our View Holder
     // store card views.
@@ -24,6 +29,7 @@ public class CaptionedImagesAdapter  extends RecyclerView.Adapter<CaptionedImage
 
     private String[] captions;
     private int[] imageIds;
+    private Listener listener;
 
     public CaptionedImagesAdapter(String[] captions, int[] imageIds) {
         this.captions = captions;
@@ -38,7 +44,7 @@ public class CaptionedImagesAdapter  extends RecyclerView.Adapter<CaptionedImage
     }
 
     @Override
-    public void onBindViewHolder(CaptionedImagesAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(CaptionedImagesAdapter.ViewHolder holder, final int position) {
         // Create a new view
         // Gets called whenever Recycler View needs to display data in a View Holder
 
@@ -56,11 +62,24 @@ public class CaptionedImagesAdapter  extends RecyclerView.Adapter<CaptionedImage
         TextView textView = (TextView)cv.findViewById(R.id.info_text);
         textView.setText(captions[position]);
 
+        cv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(listener != null) {
+                    listener.onClick(position);
+                }
+            }
+        });
+
     }
 
     @Override
     public int getItemCount() {
         // Return the number of items in dataset
         return captions.length;
+    }
+
+    public void setListener(Listener l) {
+        this.listener = l;
     }
 }
